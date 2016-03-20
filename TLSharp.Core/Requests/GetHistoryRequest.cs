@@ -71,8 +71,5 @@ namespace TLSharp.Core.Requests
 		{
 			throw new NotImplementedException();
 		}
-
-		public override bool Confirmed => true;
-		public override bool Responded { get; }
 	}
 }

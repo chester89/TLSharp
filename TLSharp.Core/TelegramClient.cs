@@ -62,7 +62,7 @@ namespace TLSharp.Core
 		private async Task ReconnectToDc(int dcId)
 		{
 			if (dcOptions == null || !dcOptions.Any())
-				throw new InvalidOperationException($"Can't reconnect. Establish initial connection first.");
+				throw new InvalidOperationException("Can't reconnect. Establish initial connection first.");
 
 			var dc = dcOptions.Cast<DcOptionConstructor>().First(d => d.id == dcId);
 
@@ -93,6 +93,8 @@ namespace TLSharp.Core
 		public async Task<string> SendCodeRequest(string phoneNumber)
 		{
 			var completed = false;
+		    var downloadFailed = false;
+		    InvalidOperationException capturedException = null;
 
 			AuthSendCodeRequest request = null;
 
@@ -112,13 +114,18 @@ namespace TLSharp.Core
 				{
 					if (ex.Message.StartsWith("Your phone number registered to") && ex.Data["dcId"] != null)
 					{
-						await ReconnectToDc((int) ex.Data["dcId"]);
+					    downloadFailed = true;
+					    capturedException = ex;
 					}
 					else
 					{
 						throw;
 					}
 				}
+			    if (downloadFailed)
+			    {
+                    await ReconnectToDc((int)capturedException.Data["dcId"]);
+			    }
 			}
 
 			return request._phoneCodeHash;
@@ -164,7 +171,7 @@ namespace TLSharp.Core
 				await _sender.Recieve(saveFilePartRequest);
 
 				if (saveFilePartRequest.Done == false)
-					throw new InvalidOperationException($"File part {i} does not uploaded");
+					throw new InvalidOperationException(string.Format("File part {0} does not uploaded", i));
 			}
 
 			string md5_checksum;
@@ -207,7 +214,7 @@ namespace TLSharp.Core
 
 			var importedUser = (ImportedContactConstructor)request.imported.FirstOrDefault();
 
-			return importedUser?.user_id;
+		    return importedUser == null ? new int?(): importedUser.user_id;
 		}
 
 		public async Task<int?> ImportByUserName(string username)

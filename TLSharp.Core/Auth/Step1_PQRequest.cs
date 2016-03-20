@@ -53,7 +53,7 @@ namespace TLSharp.Core.Auth
 					var responseCode = binaryReader.ReadInt32();
 					if (responseCode != responseConstructorNumber)
 					{
-						throw new InvalidOperationException($"invalid response code: {responseCode}");
+						throw new InvalidOperationException("invalid response code: " + responseCode);
 					}
 
 					var nonceFromServer = binaryReader.ReadBytes(16);
@@ -72,7 +72,7 @@ namespace TLSharp.Core.Auth
 					const int vectorConstructorNumber = 0x1cb5c415;
 					if (vectorId != vectorConstructorNumber)
 					{
-						throw new InvalidOperationException($"Invalid vector constructor number {vectorId}");
+						throw new InvalidOperationException("Invalid vector constructor number " + vectorId);
 					}
 
 					var fingerprintCount = binaryReader.ReadInt32();

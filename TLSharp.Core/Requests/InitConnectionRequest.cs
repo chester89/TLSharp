@@ -51,6 +51,5 @@ namespace TLSharp.Core.Requests
 		{
 
 		}
-		public override bool Confirmed => true;
 	}
 }

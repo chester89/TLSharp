@@ -38,7 +38,6 @@ namespace TLSharp.Core.Requests
             throw new NotImplementedException();
         }
 
-        public override bool Confirmed { get { return true; } }
         private readonly bool responded;
         public override bool Responded { get { return responded; } }
     }

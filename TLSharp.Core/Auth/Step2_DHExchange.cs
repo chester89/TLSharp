@@ -100,7 +100,7 @@ namespace TLSharp.Core.Auth
 
 					if (responseCode != 0xd0e8075c)
 					{
-						throw new InvalidOperationException($"invalid response code: {responseCode}");						
+						throw new InvalidOperationException("invalid response code: " + responseCode);						
 					}
 
 					byte[] nonceFromServer = responseReader.ReadBytes(16);

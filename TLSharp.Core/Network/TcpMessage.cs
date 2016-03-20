@@ -12,7 +12,7 @@ namespace TLSharp.Core.Network
 		public TcpMessage(int seqNumber, byte[] body)
 		{
 			if (body == null)
-				throw new ArgumentNullException(nameof(body));
+				throw new ArgumentNullException("body");
 
 			SequneceNumber = seqNumber;
 			Body = body;
@@ -51,7 +51,7 @@ namespace TLSharp.Core.Network
 		public static TcpMessage Decode(byte[] body)
 		{
 			if (body == null)
-				throw new ArgumentNullException(nameof(body));
+				throw new ArgumentNullException("body");
 
 			if (body.Length < 12)
 				throw new InvalidOperationException("Ops, wrong size of input packet");

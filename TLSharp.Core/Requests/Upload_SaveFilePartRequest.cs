@@ -29,7 +29,7 @@ namespace TLSharp.Core.Requests
             var code = reader.ReadUInt32();
 
             if (code != 0xbc799737 && code != 0x997275b5)
-                throw new InvalidOperationException($"Expected Tl Bool type");
+                throw new InvalidOperationException("Expected Tl Bool type");
             
             Done = code == 0x997275b5 ? true : false;
         }
@@ -46,8 +46,5 @@ namespace TLSharp.Core.Requests
         {
             throw new NotImplementedException();
         }
-
-        public override bool Confirmed => true;
-        public override bool Responded { get; }
     }
 }

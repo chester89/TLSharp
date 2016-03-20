@@ -110,7 +110,7 @@ namespace TLSharp.Core.Network
 			using (var inputReader = new BinaryReader(inputStream))
 			{
 				if (inputReader.BaseStream.Length < 8)
-					throw new InvalidOperationException($"Can't decode packet");
+					throw new InvalidOperationException("Can't decode packet");
 				
 				ulong remoteAuthKeyId = inputReader.ReadUInt64(); // TODO: check auth key id
 				byte[] msgKey = inputReader.ReadBytes(16); // TODO: check msg_key correctness
@@ -272,14 +272,15 @@ namespace TLSharp.Core.Network
 				{
 					var resultString = Regex.Match(errorMessage, @"\d+").Value;
 					var seconds = int.Parse(resultString);
-					Debug.WriteLine($"Should wait {seconds} sec.");
+					Debug.WriteLine("Should wait {0} sec.", seconds);
 					Thread.Sleep(1000*seconds);
 				}
 				else if (errorMessage.StartsWith("PHONE_MIGRATE_"))
 				{
 					var resultString = Regex.Match(errorMessage, @"\d+").Value;
 					var dcIdx = int.Parse(resultString);
-					var exception = new InvalidOperationException($"Your phone number registered to {dcIdx} dc. Please update settings. See https://github.com/sochix/TLSharp#i-get-an-error-migrate_x for details.");
+					var exception = new InvalidOperationException(
+                        string.Format("Your phone number registered to {0} dc. Please update settings. See https://github.com/sochix/TLSharp#i-get-an-error-migrate_x for details.", dcIdx));
 					exception.Data.Add("dcId", dcIdx);
 					throw exception;
 				}

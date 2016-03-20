@@ -15,7 +15,7 @@ namespace TLSharp.Core
 	{
 		public void Save(Session session)
 		{
-			using (var stream = new FileStream($"{session.SessionUserId}.dat", FileMode.OpenOrCreate))
+			using (var stream = new FileStream(string.Format("{0}.dat", session.SessionUserId), FileMode.OpenOrCreate))
 			{
 				var result = session.ToBytes();
 				stream.Write(result, 0, result.Length);
@@ -24,7 +24,7 @@ namespace TLSharp.Core
 
 		public Session Load(string sessionUserId)
 		{
-			using (var stream = new FileStream($"{sessionUserId}.dat", FileMode.Open))
+			using (var stream = new FileStream(string.Format("{0}.dat", sessionUserId), FileMode.Open))
 			{
 				var buffer = new byte[2048];
 				stream.Read(buffer, 0, 2048);

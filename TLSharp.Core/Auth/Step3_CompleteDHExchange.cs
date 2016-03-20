@@ -40,7 +40,7 @@ namespace TLSharp.Core.Auth
 					uint code = dhInnerDataReader.ReadUInt32();
 					if (code != 0xb5890dba)
 					{
-						throw new InvalidOperationException($"invalid dh_inner_data code: {code}");
+						throw new InvalidOperationException(string.Format("invalid dh_inner_data code: {0}", code));
 					}
 
 					// logger.debug("valid code");
@@ -200,7 +200,7 @@ namespace TLSharp.Core.Auth
 					}
 					else
 					{
-						throw new InvalidOperationException($"dh_gen unknown: {code}");
+						throw new InvalidOperationException("dh_gen unknown: " + code);
 					}
 				}
 			}	
