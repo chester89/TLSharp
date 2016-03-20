@@ -13,29 +13,32 @@ using MD5 = System.Security.Cryptography.MD5;
 
 namespace TLSharp.Core
 {
-	public class TelegramClient
+	public class TelegramClient: IDisposable
 	{
 		private MtProtoSender _sender;
-		private AuthKey _key;
+        //private AuthKey _key;
 		private TcpTransport _transport;
-		private string _apiHash = "a2514f96431a228e4b9ee473f6c51945";
-		private int _apiId = 19474;
+        private string _apiHash;
+        private int _apiId;
 		private Session _session;
 		private List<DcOption> dcOptions; 
 
-		public TelegramClient(ISessionStore store, string sessionUserId)
+		public TelegramClient(ISessionStore store, string sessionUserId, int apiId, string apiHash)
 		{
-			if (_apiId == 0)
+		    _apiId = apiId;
+		    _apiHash = apiHash;
+
+			if (apiId == 0)
 				throw new InvalidOperationException("Your API_ID is invalid. Do a configuration first https://github.com/sochix/TLSharp#quick-configuration");
 
-			if (string.IsNullOrEmpty(_apiHash))
+			if (string.IsNullOrEmpty(apiHash))
 				throw new InvalidOperationException("Your API_ID is invalid. Do a configuration first https://github.com/sochix/TLSharp#quick-configuration");
 
 			_session = Session.TryLoadOrCreateNew(store, sessionUserId);
 			_transport = new TcpTransport(_session.ServerAddress, _session.Port);
 		}
 		
-		public async Task<bool> Connect(bool reconnect = false)
+		public async Task<bool> Connect(bool reconnect = false) 
 		{
 			if (_session.AuthKey == null || reconnect)
 			{
@@ -103,8 +106,6 @@ namespace TLSharp.Core
 				request = new AuthSendCodeRequest(phoneNumber, 5, _apiId, _apiHash, "en");
 				try
 				{
-					
-
 					await _sender.Send(request);
 					await _sender.Recieve(request);
 
@@ -237,6 +238,14 @@ namespace TLSharp.Core
 			await _sender.Recieve(request);
 		}
 
+        public async Task SendMessageToChat(int id, string message)
+        {
+            var request = new SendMessageRequest(new InputPeerChatConstructor(id), message);
+
+            await _sender.Send(request);
+            await _sender.Recieve(request);
+        }
+
 		public async Task<List<Message>> GetMessagesHistoryForContact(int user_id, int offset, int limit, int max_id = -1)
 		{
 			var request = new GetHistoryRequest(new InputPeerContactConstructor(user_id), offset, max_id, limit);
@@ -252,5 +261,10 @@ namespace TLSharp.Core
 
 			return regex.IsMatch(number);
 		}
+
+	    public void Dispose()
+	    {
+	        _transport.Dispose();
+	    }
 	}
 }

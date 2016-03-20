@@ -85,7 +85,9 @@
     <Compile Include="Utils\Helpers.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <Compile Include="Requests\CreateChatRequest.cs" />
     <None Include="Requests\AddChatUserRequest.cs" />
     <None Include="Requests\DeleteChatUserRequest.cs" />
